@@ -40,3 +40,38 @@ cm = confusion_matrix(y_test, y_pred)
 print (cm)
 print(classification_report(y_test, y_pred))
 print(round(accuracy_score(y_test, y_pred)*100,2))
+
+#print(cmat)
+print('TP - True Negative {}'.format(cm[0,0]))
+print('FP - False Positive {}'.format(cm[0,1]))
+print('FN - False Negative {}'.format(cm[1,0]))
+print('TP - True Positive {}'.format(cm[1,1]))
+print('Accuracy Rate: {}'.format(np.divide(np.sum([cm[0,0],cm[1,1]]),np.sum(cm))))
+print('Misclassification Rate: {}'.format(np.divide(np.sum([cm[0,1],cm[1,0]]),np.sum(cm))))
+
+# Generate function to add error rates of KNN with various k-values
+# error_rate -> empty list to gather error rates at various k-values
+# for loop -> loops through k values 1 to 39
+# knn -> creates instance of KNeighborsClassifier with various k
+# knn.fit -> trains the model
+# pred_i -> conducts predictions from model on test subset
+# error_rate.append -> adds error rate of model with various k-value, using the average where prediction not
+# equal to the test values
+error_rate = []
+for i in range(1,40):
+    
+    knn = KNeighborsClassifier(n_neighbors=i)
+    knn.fit(X_train, y_train)
+    pred_i = knn.predict(X_test)
+    error_rate.append(np.mean(pred_i != y_test))
+    
+    # Configure and plot error rate over k values
+plt.figure(figsize=(10,4))
+plt.plot(range(1,40), error_rate, color='blue', linestyle='dashed', marker='o', markerfacecolor='red', markersize=10)
+plt.title('Error Rate vs. K-Values')
+plt.xlabel('K-Values')
+plt.ylabel('Error Rate')
+
+# Retrain model using optimal k-value
+# Print out classification report and confusion matrix
+
